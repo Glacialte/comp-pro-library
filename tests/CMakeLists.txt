@@ -1,0 +1,8 @@
+function(add_gtest name)
+  add_executable(${name} ${name}.cpp)
+  target_link_libraries(${name} PRIVATE GTest::gtest_main comp_pro_library)
+  include(GoogleTest)
+  gtest_discover_tests(${name})
+endfunction()
+
+add_gtest(test_unionfind)
