@@ -1,18 +1,22 @@
-#include <bits/stdc++.h>
+#include <vector>
+#include <numeric>
+#include <cstddef>
+#include <utility>
+#include <ranges>
 
 namespace glc
 {
     class UnionFind
     {
     public:
-        UnionFind(const std::size_t size) : _size(size, std::size_t{1}), _parent(size)
+        explicit UnionFind(std::size_t size) : _size(size, std::size_t{1}), _parent(size)
         {
 
             std::iota(_parent.begin(), _parent.end(), 0);
         }
 
         // `id`の所属する集合の代表元を返す
-        [[nodiscard]] std::size_t get_root(const std::size_t id)
+        [[nodiscard]] std::size_t get_root(std::size_t id)
         {
             if (_parent[id] == id)
                 return id;
@@ -20,13 +24,13 @@ namespace glc
         }
 
         // `id`の所属する集合のサイズを返す
-        [[nodiscard]] std::size_t get_size(const std::size_t id)
+        [[nodiscard]] std::size_t get_size(std::size_t id)
         {
             return _size[get_root(id)];
         }
 
         // `left`と`right`の所属する集合が等しいか返す
-        [[nodiscard]] bool is_same(const std::size_t left, const std::size_t right)
+        [[nodiscard]] bool is_same(std::size_t left, std::size_t right)
         {
             return get_root(left) == get_root(right);
         }
@@ -39,8 +43,8 @@ namespace glc
             auto root_right = get_root(right);
             if (root_left == root_right)
                 return false;
-            auto size_left = get_size(root_left);
-            auto size_right = get_size(root_right);
+            auto size_left = _size[root_left];
+            auto size_right = _size[root_right];
             if (size_left < size_right)
                 std::swap(root_left, root_right);
             _parent[root_right] = root_left;
@@ -49,6 +53,6 @@ namespace glc
         }
 
     private:
-        std::vector<size_t> _size, _parent;
+        std::vector<std::size_t> _size, _parent;
     };
 }
