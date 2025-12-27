@@ -1,0 +1,17 @@
+{
+	"name": "COMP-PRO Library",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"postCreateCommand": "\
+	curl -fsSL https://starship.rs/install.sh | sh -s -- -y && \
+	grep -q 'starship init bash' ~/.bashrc || \
+	echo 'eval \"$(starship init bash)\"' >> ~/.bashrc \
+	",
+	"mounts": [
+		"source=${localEnv:SSH_AUTH_SOCK},target=/ssh-agent,type=bind"
+	],
+	"remoteEnv": {
+		"SSH_AUTH_SOCK": "/ssh-agent"
+	},
+}
