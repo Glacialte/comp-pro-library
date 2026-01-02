@@ -6,7 +6,8 @@ BUILD_DIR="${ROOT_DIR}/build"
 
 cmake -S "${ROOT_DIR}" -B "${BUILD_DIR}" \
   -DCMAKE_BUILD_TYPE=Debug \
-  -DBUILD_TESTING=ON
+  -DBUILD_TESTING=ON \
+  -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
 cmake --build "${BUILD_DIR}" --parallel
 
