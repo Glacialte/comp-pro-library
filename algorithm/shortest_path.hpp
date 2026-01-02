@@ -158,6 +158,13 @@ namespace gcl
     {
         std::size_t to;
         W weight;
+
+        Edge() = default;
+        template <typename T, typename We>
+            requires std::integral<std::remove_reference_t<T>>
+        constexpr Edge(T &&to_, We &&weight_) : to(static_cast<std::size_t>(to_)), weight(std::move(weight_))
+        {
+        }
     };
 
     template <typename W>
