@@ -5,10 +5,10 @@
 今の所は以下を追加予定
 - データ構造
     - [x] UnionFind
-    - [] Splay tree
-    - [] Fenwick tree
-    - [] segment tree
-    - [] lazy segment tree
+    - [ ] Splay tree
+    - [ ] Fenwick tree
+    - [ ] segment tree
+    - [ ] lazy segment tree
     - 面白そうな木
 - アルゴリズム
     - [x] Dijkstra
