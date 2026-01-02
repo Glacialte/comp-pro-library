@@ -18,3 +18,15 @@
 
 ## requirements
 - C++20対応コンパイラ
+- Python
+
+## 使い方
+- main.cppにコードを追加
+- 以下のコマンドでライブラリを展開
+```sh
+python3 scripts/expand.py main.cpp -o expanded.cpp
+```
+- 以下のコマンドでコンパイル
+```sh
+g++ -o expanded ./expanded.cpp -std=c++20
+```
