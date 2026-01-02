@@ -59,16 +59,16 @@ namespace gcl
 
     inline constexpr std::size_t npos = std::numeric_limits<std::size_t>::max();
 
-    template <class W>
-    struct ShortestPathResult
+    template <typename W>
+    struct DijkstraResult
     {
         std::size_t start;
         std::vector<W> dist;
         std::vector<std::size_t> parent;
 
-        ShortestPathResult(std::size_t start_,
-                           std::vector<W> &&dist_,
-                           std::vector<std::size_t> &&parent_) : start(start_), dist(std::move(dist_)), parent(std::move(parent_)) {}
+        DijkstraResult(std::size_t start_,
+                       std::vector<W> &&dist_,
+                       std::vector<std::size_t> &&parent_) : start(start_), dist(std::move(dist_)), parent(std::move(parent_)) {}
 
         std::vector<std::size_t> restore_path(std::size_t goal) const
         {
@@ -145,11 +145,49 @@ namespace gcl
     // Dijkstra: edge weights must be non-negative, return distance and parent
     template <typename C>
         requires WeightedGraph<C>
-    ShortestPathResult<weight_t<C>> dijkstra_path(const C &graph, std::size_t start)
+    DijkstraResult<weight_t<C>> dijkstra_path(const C &graph, std::size_t start)
     {
         WithParent pp(std::ranges::size(graph));
         auto dist = dijkstra_impl(graph, start, pp);
         return {start, std::move(dist), std::move(pp.parent)};
+    }
+
+    template <typename W>
+    struct BellmanFordResult
+    {
+        std::vector<W> dist;
+        bool negative_cycle_exist;
+    };
+
+    template <typename C>
+        requires WeightedGraph<C>
+    BellmanFordResult<weight_t<C>> bellman_ford(const C &graph, std::size_t start)
+    {
+        using W = weight_t<C>;
+        constexpr W INF = std::numeric_limits<W>::max();
+        const auto N = std::ranges::size(graph);
+        std::vector<W> dist(N, INF);
+
+        bool negative_cycle_exist = false;
+        dist[start] = 0;
+        for (auto iter = std::size_t{0}; iter < N; iter++)
+        {
+            bool updated = false;
+            for (auto i = std::size_t{0}; i < N; i++)
+            {
+                if (dist[i] == INF)
+                    continue;
+                for (const auto &edge : graph[i])
+                {
+                    updated |= chmin(dist[edge.to], dist[i] + edge.weight);
+                }
+            }
+            if (!updated)
+                break;
+            if (iter == N - 1 && updated)
+                negative_cycle_exist = true;
+        }
+        return BellmanFordResult{std::move(dist), negative_cycle_exist};
     }
 
     template <typename W>
