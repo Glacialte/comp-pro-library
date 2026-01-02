@@ -4,6 +4,7 @@
 		"dockerfile": "Dockerfile"
 	},
 	"updateRemoteUserUID": true,
+	"remoteUser": "ubuntu",
 	"postCreateCommand": "mkdir -p ~/.local/bin && curl -fsSL https://starship.rs/install.sh | sh -s -- -y -b ~/.local/bin && grep -q 'starship init bash' ~/.bashrc || echo 'eval \"$(~/.local/bin/starship init bash)\"' >> ~/.bashrc && grep -q 'export PATH=\"$HOME/.local/bin:$PATH\"' ~/.bashrc || echo 'export PATH=\"$HOME/.local/bin:$PATH\"' >> ~/.bashrc",
 	"mounts": [
 		"source=${localEnv:SSH_AUTH_SOCK},target=/ssh-agent,type=bind"
