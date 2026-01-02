@@ -12,7 +12,8 @@
     - 面白そうな木
 - アルゴリズム
     - [x] Dijkstra
-    - [ ] Bellman-Ford
+        - [x] Library Checker
+    - [x] Bellman-Ford
     - [ ] Floyd-Warshall
     - [ ] 0-1 BFS
 
