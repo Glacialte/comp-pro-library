@@ -5,6 +5,7 @@
 #include <limits>
 #include <utility>
 #include <type_traits>
+#include <algorithm>
 
 namespace gcl
 {
@@ -56,9 +57,53 @@ namespace gcl
         return false;
     }
 
-    template <typename C>
+    inline constexpr std::size_t npos = std::numeric_limits<std::size_t>::max();
+
+    template <class W>
+    struct ShortestPathResult
+    {
+        std::size_t start;
+        std::vector<W> dist;
+        std::vector<std::size_t> parent;
+
+        ShortestPathResult(std::size_t start_,
+                           std::vector<W> &&dist_,
+                           std::vector<std::size_t> &&parent_) : start(start_), dist(std::move(dist_)), parent(std::move(parent_)) {}
+
+        std::vector<std::size_t> restore_path(std::size_t goal) const
+        {
+            if (goal >= parent.size())
+                return {};
+            std::vector<std::size_t>
+                path;
+            for (auto v = goal; v != npos; v = parent[v])
+            {
+                path.push_back(v);
+                if (v == start)
+                    break;
+            }
+            if (path.empty() || path.back() != start)
+                return {};
+            std::reverse(path.begin(), path.end());
+            return path;
+        }
+    };
+
+    struct NoParent
+    {
+        void relax(std::size_t /*to*/, std::size_t /*from*/) noexcept {}
+    };
+
+    struct WithParent
+    {
+        std::vector<std::size_t> parent;
+        explicit WithParent(std::size_t n) : parent(n, npos) {}
+        void relax(std::size_t to, std::size_t from) noexcept { parent[to] = from; }
+    };
+
+    template <typename C, typename ParentPolicy>
         requires WeightedGraph<C>
-    std::vector<weight_t<C>> dijkstra(const C &graph, std::size_t start)
+    std::vector<weight_t<C>> dijkstra_impl(const C &graph, std::size_t start, ParentPolicy &pp)
     {
         using W = weight_t<C>;
         using Pair = std::pair<W, std::size_t>;
@@ -79,9 +124,42 @@ namespace gcl
             {
                 W nd = d + static_cast<W>(e.weight);
                 if (chmin(dist[e.to], nd))
-                    pq.push({dist[e.to], e.to});
+                {
+                    pp.relax(e.to, v);
+                    pq.push({nd, e.to});
+                }
             }
         }
         return dist;
     }
+
+    // Dijkstra: edge weights must be non-negative, return only distance
+    template <typename C>
+        requires WeightedGraph<C>
+    std::vector<weight_t<C>> dijkstra_dist(const C &graph, std::size_t start)
+    {
+        NoParent pp;
+        return dijkstra_impl(graph, start, pp);
+    }
+
+    // Dijkstra: edge weights must be non-negative, return distance and parent
+    template <typename C>
+        requires WeightedGraph<C>
+    ShortestPathResult<weight_t<C>> dijkstra_path(const C &graph, std::size_t start)
+    {
+        WithParent pp(std::ranges::size(graph));
+        auto dist = dijkstra_impl(graph, start, pp);
+        return {start, std::move(dist), std::move(pp.parent)};
+    }
+
+    template <typename W>
+        requires Weight<W>
+    struct Edge
+    {
+        std::size_t to;
+        W weight;
+    };
+
+    template <typename W>
+    using Graph = std::vector<std::vector<Edge<W>>>;
 }
