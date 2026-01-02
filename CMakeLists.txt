@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # ライブラリ本体
 add_library(comp_pro_library INTERFACE)
 target_include_directories(comp_pro_library INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/data-structure)
+target_include_directories(comp_pro_library INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/algorithm)
 
 # ===== google tests =====
 include(CTest)

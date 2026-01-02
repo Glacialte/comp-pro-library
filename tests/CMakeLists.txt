@@ -6,3 +6,4 @@ function(add_gtest name)
 endfunction()
 
 add_gtest(test_unionfind)
+add_gtest(test_shortest_path)
