@@ -4,7 +4,7 @@
 #include <utility>
 #include <ranges>
 
-namespace glc
+namespace gcl
 {
     class UnionFind
     {
