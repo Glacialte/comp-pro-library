@@ -11,6 +11,10 @@
     - [] lazy segment tree
     - 面白そうな木
 - アルゴリズム
+    - [x] Dijkstra
+    - [ ] Bellman-Ford
+    - [ ] Floyd-Warshall
+    - [ ] 0-1 BFS
 
 ## requirements
 - C++20対応コンパイラ
