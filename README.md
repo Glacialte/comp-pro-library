@@ -6,7 +6,7 @@
 - データ構造
     - [x] UnionFind
     - [ ] Splay tree
-    - [ ] Fenwick tree
+    - [x] Fenwick tree
     - [ ] segment tree
     - [ ] lazy segment tree
     - 面白そうな木
