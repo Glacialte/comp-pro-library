@@ -122,3 +122,69 @@ TEST(BellmanFord, NegativeCycleUnreachable)
     EXPECT_EQ(res.dist[3], INF);
     EXPECT_EQ(res.dist[4], INF);
 }
+
+TEST(ShortestPathConcept, DefaultGraph)
+{
+    static_assert(gcl::WeightedGraph<gcl::Graph<std::uint64_t>>);
+    static_assert(gcl::WeightedGraph<gcl::Graph<std::int64_t>>);
+    static_assert(gcl::WeightedGraph<gcl::Graph<std::uint32_t>>);
+    static_assert(gcl::WeightedGraph<gcl::Graph<std::int32_t>>);
+    static_assert(gcl::Weight<std::uint64_t>);
+    static_assert(gcl::Weight<std::int64_t>);
+    static_assert(gcl::Weight<std::uint32_t>);
+    static_assert(gcl::Weight<std::int32_t>);
+    static_assert((gcl::WeightedEdge<gcl::Edge<std::uint64_t>, std::uint64_t>));
+    static_assert((gcl::WeightedEdge<gcl::Edge<std::int64_t>, std::int64_t>));
+    static_assert((gcl::WeightedEdge<gcl::Edge<std::uint32_t>, std::uint32_t>));
+    static_assert((gcl::WeightedEdge<gcl::Edge<std::int32_t>, std::int32_t>));
+}
+
+TEST(ShortestPathConcept, EdgeHasToMember)
+{
+    struct EdgeWithoutTo
+    {
+        std::uint64_t weight;
+    };
+    using G1 = std::vector<std::vector<EdgeWithoutTo>>;
+    struct Edge
+    {
+        std::size_t to;
+        std::uint64_t weight;
+    };
+    using G2 = std::vector<std::vector<Edge>>;
+    static_assert(!gcl::WeightedGraph<G1>);
+    static_assert(gcl::WeightedGraph<G2>);
+}
+
+TEST(ShortestPathConcept, EdgeHasWeightMember)
+{
+    struct EdgeWithoutWeight
+    {
+        std::size_t to;
+    };
+    using G1 = std::vector<std::vector<EdgeWithoutWeight>>;
+    struct Edge
+    {
+        std::size_t to;
+        std::uint64_t weight;
+    };
+    using G2 = std::vector<std::vector<Edge>>;
+    static_assert(!gcl::WeightedGraph<G1>);
+    static_assert(gcl::WeightedGraph<G2>);
+}
+
+TEST(ShortestPathConcept, GraphIsRange)
+{
+    struct Edge
+    {
+        std::size_t to;
+        std::uint64_t weight;
+    };
+    struct WeirdGraph
+    {
+        std::vector<int> dummy;
+        size_t size() const { return dummy.size(); };
+        Edge operator[](size_t) { return Edge(); };
+    };
+    static_assert(!gcl::WeightedGraph<WeirdGraph>);
+}
