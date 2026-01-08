@@ -7,3 +7,4 @@ endfunction()
 
 add_gtest(test_unionfind)
 add_gtest(test_shortest_path)
+add_gtest(test_fenwick_tree)
