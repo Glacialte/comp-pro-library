@@ -6,6 +6,7 @@
 #include <utility>
 #include <type_traits>
 #include <algorithm>
+#include <functional>
 
 namespace gcl
 {
@@ -42,6 +43,8 @@ namespace gcl
         Weight<weight_t<C>> &&
         std::ranges::sized_range<C> &&
         requires(const C &cont, std::size_t i) {
+            cont[i];
+            requires std::ranges::range<decltype(cont[i])>;
             requires WeightedEdge<edge_t<C>, weight_t<C>>;
         };
 
@@ -169,7 +172,7 @@ namespace gcl
         std::vector<W> dist(N, INF);
 
         bool negative_cycle_exist = false;
-        dist[start] = 0;
+        dist[start] = W{};
         for (auto iter = std::size_t{0}; iter < N; iter++)
         {
             bool updated = false;
@@ -198,9 +201,12 @@ namespace gcl
         W weight;
 
         Edge() = default;
+
+        constexpr Edge(std::size_t to_, W weight_) : to(to_), weight(std::move(weight_)) {}
+
         template <typename T, typename We>
-            requires std::integral<std::remove_reference_t<T>>
-        constexpr Edge(T &&to_, We &&weight_) : to(static_cast<std::size_t>(to_)), weight(std::move(weight_))
+            requires std::convertible_to<std::remove_reference_t<T>, std::size_t> && std::convertible_to<We, W>
+        constexpr Edge(T &&to_, We &&weight_) : to(static_cast<std::size_t>(to_)), weight(static_cast<W>(std::forward<We>(weight_)))
         {
         }
     };
