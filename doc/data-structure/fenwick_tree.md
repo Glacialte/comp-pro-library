@@ -24,7 +24,7 @@ Fenwick Tree の実装では、`T{}` が **加法に関する単位元（零元�
 - `sum(std::size_t left, std::size_t right)`：区間`[left, right)`の和を計算する
 - `size()`：管理している要素数を返す
 
-## 仕様例
+## 使用例
 ```cpp
 #include <vector>
 #include <cassert>
