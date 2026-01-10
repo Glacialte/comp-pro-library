@@ -25,7 +25,7 @@
   - 結合した場合は `true` を返す  
   - サイズが同じ集合同士の場合は **左側（`left` 側の root）に結合**する
 
-## 仕様例
+## 使用例
 ```cpp
 #include <cassert>
 #include "data-structure/unionfind.hpp"
