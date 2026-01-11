@@ -1,0 +1,56 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "[gcl] build (expand + compile)",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "-O2",
+                "-std=c++20",
+                "expanded.cpp",
+                "-o",
+                "expanded"
+            ],
+            "dependsOn": [
+                "[gcl] expand"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+        {
+            "label": "[gcl] expand",
+            "type": "shell",
+            "command": "python3",
+            "args": [
+                "scripts/expand.py",
+                "main.cpp",
+                "-o",
+                "expanded.cpp"
+            ],
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "[gcl] compile",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "-O2",
+                "-std=c++20",
+                "expanded.cpp",
+                "-o",
+                "expanded"
+            ],
+            "group": "build",
+            "problemMatcher": [
+                "$gcc"
+            ]
+        }
+    ]
+}
