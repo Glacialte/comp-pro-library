@@ -13,6 +13,9 @@ g++ -O2 -o expanded ./expanded.cpp -std=c++20
 - 提出時は `expanded.cpp` をそのまま使う
 - `-std=c++20`を付け忘れるとコンパイルエラーになります
 
+VSCode を利用している場合、`.vscode/tasks.json` を用いて  
+`expand → compile` を`Ctrl+Shift+B`で実行できます。
+
 ## 特徴・設計方針
 - 競技プログラミング向け（AtCoder / Codeforces / Library Checker を想定）
 - 提出用に 1 ファイルへ展開 (expand) する運用を前提
@@ -35,7 +38,7 @@ g++ -O2 -o expanded ./expanded.cpp -std=c++20
 
 ## Requirements
 - C++20対応コンパイラ
-    - 動作確認例：`g++ >= 13.3.0`
+    - 動作確認例：`g++ 13.3.0`
 - Python3.x (expandスクリプト用)
 
 ## 使い方
@@ -69,9 +72,9 @@ g++ -O2 -o expanded ./expanded.cpp -std=c++20
 ├── all.hpp        # algorithm/ data-structure/ のファイル全てをインクルードするためのファイル
 ├── main.cpp       # ユーザが編集する入口
 ├── expanded.cpp   # 自動生成（提出用）
-├── .vscode        # 開発時のIntellisense等のコンフィグ
+├── .vscode        # 開発時のIntellisense等のコンフィグ, ビルドタスク
 └── .devcontainer/ # devcontainer用ファイル群
 ```
 
 ## 注意点
-- 提出前に必ずlocalでコンパイル・実行確認してください
+- 提出前に必ずローカル環境でコンパイル・実行確認してください
