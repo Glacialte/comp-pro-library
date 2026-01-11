@@ -1,11 +1,12 @@
 #include <gtest/gtest.h>
 #include "../algorithm/shortest_path.hpp"
+#include "../data-structure/graph.hpp"
 
 using ull = std::uint64_t;
 
 TEST(Dijkstra, SimpleLine)
 {
-    gcl::Graph<ull> g(4);
+    gcl::WGraph<ull> g(4);
     g[0].push_back({1, 5});
     g[1].push_back({2, 6});
     g[2].push_back({3, 9});
@@ -20,7 +21,7 @@ TEST(Dijkstra, SimpleLine)
 
 TEST(Dijkstra, TwoPathExists)
 {
-    gcl::Graph<ull> g(3);
+    gcl::WGraph<ull> g(3);
     g[0].push_back({1, 5});
     g[0].push_back({2, 15});
     g[1].push_back({2, 7});
@@ -33,7 +34,7 @@ TEST(Dijkstra, TwoPathExists)
 
 TEST(Dijkstra, CycleExists)
 {
-    gcl::Graph<ull> g(4);
+    gcl::WGraph<ull> g(4);
     g[0].push_back({1, 2});
     g[1].push_back({2, 3});
     g[1].push_back({3, 1});
@@ -51,7 +52,7 @@ TEST(Dijkstra, CycleExists)
 TEST(Dijkstra, Unreachable)
 {
     constexpr ull INF = std::numeric_limits<ull>::max();
-    gcl::Graph<ull> g(4);
+    gcl::WGraph<ull> g(4);
     g[0].push_back({1, 3});
 
     auto dist = gcl::dijkstra_dist(g, 0);
@@ -66,7 +67,7 @@ TEST(BellmanFord, SimpleGraphNoNegativeCycle)
     using ll = long long;
     constexpr ll INF = std::numeric_limits<ll>::max();
 
-    gcl::Graph<ll> g(5);
+    gcl::WGraph<ll> g(5);
     g[0].push_back({1, 4});
     g[1].push_back({2, -2});
     g[2].push_back({3, 3});
@@ -87,7 +88,7 @@ TEST(BellmanFord, ReachableNegativeCycle)
 {
     using ll = long long;
 
-    gcl::Graph<ll> g(4);
+    gcl::WGraph<ll> g(4);
     // 1<->2 で負閉路
     g[0].push_back({1, 1});
     g[1].push_back({2, 1});
@@ -103,7 +104,7 @@ TEST(BellmanFord, NegativeCycleUnreachable)
     using ll = long long;
     constexpr ll INF = std::numeric_limits<ll>::max();
 
-    gcl::Graph<ll> g(5);
+    gcl::WGraph<ll> g(5);
     // start=0 から到達できる部分（負閉路なし）
     g[0].push_back({1, 2});
     g[1].push_back({2, 2});
@@ -121,70 +122,4 @@ TEST(BellmanFord, NegativeCycleUnreachable)
     EXPECT_EQ(res.dist[2], 4);
     EXPECT_EQ(res.dist[3], INF);
     EXPECT_EQ(res.dist[4], INF);
-}
-
-TEST(ShortestPathConcept, DefaultGraph)
-{
-    static_assert(gcl::WeightedGraph<gcl::Graph<std::uint64_t>>);
-    static_assert(gcl::WeightedGraph<gcl::Graph<std::int64_t>>);
-    static_assert(gcl::WeightedGraph<gcl::Graph<std::uint32_t>>);
-    static_assert(gcl::WeightedGraph<gcl::Graph<std::int32_t>>);
-    static_assert(gcl::Weight<std::uint64_t>);
-    static_assert(gcl::Weight<std::int64_t>);
-    static_assert(gcl::Weight<std::uint32_t>);
-    static_assert(gcl::Weight<std::int32_t>);
-    static_assert((gcl::WeightedEdge<gcl::Edge<std::uint64_t>, std::uint64_t>));
-    static_assert((gcl::WeightedEdge<gcl::Edge<std::int64_t>, std::int64_t>));
-    static_assert((gcl::WeightedEdge<gcl::Edge<std::uint32_t>, std::uint32_t>));
-    static_assert((gcl::WeightedEdge<gcl::Edge<std::int32_t>, std::int32_t>));
-}
-
-TEST(ShortestPathConcept, EdgeHasToMember)
-{
-    struct EdgeWithoutTo
-    {
-        std::uint64_t weight;
-    };
-    using G1 = std::vector<std::vector<EdgeWithoutTo>>;
-    struct Edge
-    {
-        std::size_t to;
-        std::uint64_t weight;
-    };
-    using G2 = std::vector<std::vector<Edge>>;
-    static_assert(!gcl::WeightedGraph<G1>);
-    static_assert(gcl::WeightedGraph<G2>);
-}
-
-TEST(ShortestPathConcept, EdgeHasWeightMember)
-{
-    struct EdgeWithoutWeight
-    {
-        std::size_t to;
-    };
-    using G1 = std::vector<std::vector<EdgeWithoutWeight>>;
-    struct Edge
-    {
-        std::size_t to;
-        std::uint64_t weight;
-    };
-    using G2 = std::vector<std::vector<Edge>>;
-    static_assert(!gcl::WeightedGraph<G1>);
-    static_assert(gcl::WeightedGraph<G2>);
-}
-
-TEST(ShortestPathConcept, GraphIsRange)
-{
-    struct Edge
-    {
-        std::size_t to;
-        std::uint64_t weight;
-    };
-    struct WeirdGraph
-    {
-        std::vector<int> dummy;
-        size_t size() const { return dummy.size(); };
-        Edge operator[](size_t) { return Edge(); };
-    };
-    static_assert(!gcl::WeightedGraph<WeirdGraph>);
 }

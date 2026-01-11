@@ -64,6 +64,7 @@ g++ -O2 -o expanded ./expanded.cpp -std=c++20
 ## ディレクトリ構成
 ```sh
 .
+├── concepts/      # アルゴリズムやデータ構造が満たすべきコンセプト
 ├── algorithm/     # 特定データ構造に依存しないアルゴリズム
 ├── data-structure # データ構造
 ├── doc/           # ドキュメント

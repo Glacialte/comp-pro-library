@@ -1,12 +1,18 @@
 # 最短経路問題
-## Graph
-`gcl::Graph<W>`は重み付き有向グラフを表す隣接リストである。頂点は 0-based index (`0, ..., N-1`) で管理される
+この章では、重み付きグラフに対する最短経路アルゴリズムを提供する。
 
-`W`は全順序集合であり、加算および加算代入が可能なコンセプトである。
-`W`は探索中に発生する`dist[u] + weight`がオーバーフローしない型を選ぶこと。
+グラフの表現そのもの（`WGraph` や `WEdge` の定義）については  
+`data-structure/graph.hpp` のドキュメントを参照すること。
 
-- `Graph<W>` は `std::vector<std::vector<Edge<W>>>`
-- `Edge<W>` は `{to, weight}` を持つ
+## 前提となるグラフ
+本章で提供するアルゴリズムは、`WeightedGraph` コンセプトを満たす  **重み付き有向グラフ**を対象とする。
+
+- 頂点は **0-based index**（`0, ..., N-1`）で管理される
+- 辺は `{to, weight}` を持つ
+- 重み型 `W` は `Weight` コンセプトを満たす必要がある
+
+特に、探索中に現れる`dist[u] + weight`がオーバーフローしない型を利用者が選ぶ必要がある。
+
 
 ## BellmanFord
 グラフと始点を渡すことで最短経路を求める。負辺を含んでも良い。
@@ -20,17 +26,18 @@
 ```cpp
 #include <bits/stdc++.h>
 #include "../algorithm/shortest_path.hpp"
+#include "../data-structure/graph.hpp"
 
 using namespace std;
 
 int main(){
     int N = 3;
-    gcl::Graph<long long> g(N);
+    gcl::WGraph<long long> g(N);
 
     // 辺の追加
-    g[0].push_back(gcl::Edge{1, 5});
-    g[1].push_back(gcl::Edge{2, 6});
-    g[2].push_back(gcl::Edge{0, 7});
+    g[0].push_back(gcl::WEdge{1, 5});
+    g[1].push_back(gcl::WEdge{2, 6});
+    g[2].push_back(gcl::WEdge{0, 7});
 
     // グラフと始点を引数に取り、始点からの最短距離の配列と負閉路の有無を返す
     auto [dist, negative_cycle_exist] = gcl::bellman_ford(g, 0);
@@ -49,17 +56,18 @@ int main(){
 ```cpp
 #include <bits/stdc++.h>
 #include "../algorithm/shortest_path.hpp"
+#include "../data-structure/graph.hpp"
 
 using namespace std;
 
 int main(){
     int N = 3;
-    gcl::Graph<long long> g(N);
+    gcl::WGraph<long long> g(N);
 
     // 辺の追加
-    g[0].push_back(gcl::Edge{1, 5});
-    g[1].push_back(gcl::Edge{2, 6});
-    g[2].push_back(gcl::Edge{0, 7});
+    g[0].push_back(gcl::WEdge{1, 5});
+    g[1].push_back(gcl::WEdge{2, 6});
+    g[2].push_back(gcl::WEdge{0, 7});
 
     // グラフと始点を引数に取り、始点からの最短距離の配列を返す
     auto dist = gcl::dijkstra_dist(g, 0);

@@ -1,53 +1,13 @@
 #include <vector>
 #include <ranges>
-#include <concepts>
 #include <queue>
-#include <limits>
 #include <utility>
-#include <type_traits>
 #include <algorithm>
 #include <functional>
+#include "../concepts/graph_concepts.hpp"
 
 namespace gcl
 {
-    template <typename W>
-    concept Weight =
-        std::totally_ordered<W> &&
-        std::default_initializable<W> &&
-        std::copyable<W> &&
-        requires(W a, W b) {
-            { a + b } -> std::convertible_to<W>;
-            { a += b } -> std::same_as<W &>;
-            requires std::numeric_limits<W>::is_specialized;
-            { std::numeric_limits<W>::max() } -> std::convertible_to<W>;
-        };
-
-    template <typename E, typename W>
-    concept WeightedEdge =
-        Weight<W> && requires(const E &e) {
-            { e.to } -> std::convertible_to<std::size_t>;
-            { e.weight } -> std::convertible_to<W>;
-        };
-
-    template <class C>
-    using adj_range_t = decltype(std::declval<const C &>()[std::declval<std::size_t>()]);
-
-    template <class C>
-    using edge_t = std::ranges::range_value_t<adj_range_t<C>>;
-
-    template <class C>
-    using weight_t = std::remove_cvref_t<decltype(std::declval<const edge_t<C> &>().weight)>;
-
-    template <typename C>
-    concept WeightedGraph =
-        Weight<weight_t<C>> &&
-        std::ranges::sized_range<C> &&
-        requires(const C &cont, std::size_t i) {
-            cont[i];
-            requires std::ranges::range<decltype(cont[i])>;
-            requires WeightedEdge<edge_t<C>, weight_t<C>>;
-        };
-
     template <typename T, typename U>
         requires std::totally_ordered_with<T, U> && std::assignable_from<T &, U>
     bool chmin(T &a, U &&b)
@@ -192,25 +152,4 @@ namespace gcl
         }
         return BellmanFordResult{std::move(dist), negative_cycle_exist};
     }
-
-    template <typename W>
-        requires Weight<W>
-    struct Edge
-    {
-        std::size_t to;
-        W weight;
-
-        Edge() = default;
-
-        constexpr Edge(std::size_t to_, W weight_) : to(to_), weight(std::move(weight_)) {}
-
-        template <typename T, typename We>
-            requires std::convertible_to<std::remove_reference_t<T>, std::size_t> && std::convertible_to<We, W>
-        constexpr Edge(T &&to_, We &&weight_) : to(static_cast<std::size_t>(to_)), weight(static_cast<W>(std::forward<We>(weight_)))
-        {
-        }
-    };
-
-    template <typename W>
-    using Graph = std::vector<std::vector<Edge<W>>>;
 }

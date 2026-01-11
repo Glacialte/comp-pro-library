@@ -1,2 +1,5 @@
 #include "algorithm/shortest_path.hpp"
+#include "data-structure/graph.hpp"
 #include "data-structure/unionfind.hpp"
+#include "data-structure/fenwick_tree.hpp"
+#include "concepts/graph_concepts.hpp"
