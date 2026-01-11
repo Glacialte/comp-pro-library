@@ -83,7 +83,8 @@ int main()
 ## Requirements
 - C++20対応コンパイラ
     - 動作確認例：`g++ 13.3.0`
-- Python3.x (expandスクリプト用)
+- Python3 (expandスクリプト用)
+    - 動作確認済：`python3.8`以上
 
 ## 使い方
 1. ルートディレクトリの`main.cpp`に解きたい問題のコードを書く
