@@ -16,6 +16,50 @@ g++ -O2 -o expanded ./expanded.cpp -std=c++20
 VSCode を利用している場合、`.vscode/tasks.json` を用いて  
 `expand → compile` を`Ctrl+Shift+B`で実行できます。
 
+## Example
+```cpp
+#include <bits/stdc++.h>
+#include "all.hpp"
+
+using namespace std;
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int n_vertices, n_edges, start, goal;
+    cin >> n_vertices >> n_edges >> start >> goal;
+
+    using Weight = long long;
+    gcl::WGraph<Weight> g(n_vertices);
+
+    // 辺の入力（有向）
+    while (n_edges--)
+    {
+        int from, to;
+        Weight weight;
+        cin >> from >> to >> weight;
+        g[from].push_back(gcl::WEdge<Weight>{to, weight});
+    }
+
+    // Dijkstra（経路復元付き）
+    auto result = gcl::dijkstra_path(g, start);
+
+    // 最短距離（到達不能な場合は numeric_limits<Weight>::max()）
+    cout << "distance to goal: " << result.dist[goal] << '\n';
+
+    // 経路復元（start -> goal の頂点列）
+    auto path = result.restore_path(goal);
+    cout << "path to goal: ";
+    for (auto v : path)
+    {
+        cout << v << ' ';
+    }
+    cout << '\n';
+}
+```
+
 ## 特徴・設計方針
 - 競技プログラミング向け（AtCoder / Codeforces / Library Checker を想定）
 - 提出用に 1 ファイルへ展開 (expand) する運用を前提
