@@ -72,6 +72,23 @@ int main(){
 }
 ```
 
+## 重み付き無向辺
+### struct `UWEdge<W>`
+`UWEdge<W>`は、端点を2つ持つ重み付き無向辺を表す構造体である。
+隣接リスト（`UGraph<W>`）の要素である`WEdge<W>`とは異なり、`UWEdge<W>`は始点・終点の両方を保持する。
+
+#### テンプレート引数
+- `W`：辺の重みを表す型
+#### メンバ
+- `std::size_t from`：辺の一方の端点
+- `std::size_t to`：辺のもう一方の端点
+- `W weight`：辺の重み
+#### 備考
+- `UWEdge<W>` は **無向辺の集合**として扱う用途を想定している（例：Kruskal法）。
+- `W` の要件（比較可能など）はアルゴリズム側で課される。
+- `from/to/weight` は`std::size_t` および `W` に変換可能な型から構築できる（入力の `int` や `long long` を受けやすくするため）。
+
 ## 関連
 - 重み付きグラフに対する制約は`graph_concepts.hpp`に定義されている
 - 最短経路問題アルゴリズムは`algorithm/shortest_path.hpp`を参照
+- 最小全域木（Kruskal法）は`algorithm/minimum_spanning_tree.hpp`を参照
