@@ -79,6 +79,7 @@ int main()
 - [x] Bellman-Ford
 - [ ] Floyd-Warshall
 - [ ] 0-1 BFS
+- [x] Kruskal
 
 ## Requirements
 - C++20対応コンパイラ
