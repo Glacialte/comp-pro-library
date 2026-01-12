@@ -60,13 +60,6 @@ int main()
 }
 ```
 
-## 特徴・設計方針
-- 競技プログラミング向け（AtCoder / Codeforces / Library Checker を想定）
-- 提出用に 1 ファイルへ展開 (expand) する運用を前提
-- C++20 を前提とする
-- 実行時エラーハンドリングは最小限（assert は使用する場合あり）
-- ライブラリ部分は namespace 管理
-
 ## 収録内容
 ### データ構造
 - [x] UnionFind（経路圧縮 + union by size）
